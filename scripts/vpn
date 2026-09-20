@@ -1,0 +1,147 @@
+#!/bin/bash
+
+SERVER=""
+USERNAME=""
+PASSWORD=""
+
+SCRIPT="/etc/vpnc/vpnc-script"
+
+
+show_header() {
+    clear
+    echo "╭──────────────────────────────────────────╮"
+    echo "│             ⚡ OMARCHY VPN               │"
+    echo "├──────────────────────────────────────────┤"
+    printf "│  Server   %-28s │\n" "$SERVER"
+    printf "│  User     %-28s │\n" "$USERNAME"
+    echo "╰──────────────────────────────────────────╯"
+    echo
+}
+
+
+is_connected() {
+    pgrep -x openconnect >/dev/null 2>&1
+}
+
+
+connect_vpn() {
+
+    if is_connected; then
+        echo "● VPN is already connected."
+        exit 0
+    fi
+
+    echo "● Connecting to $SERVER..."
+    echo
+
+    echo "$PASSWORD" | sudo openconnect \
+        "$SERVER" \
+        --user="$USERNAME" \
+        --passwd-on-stdin \
+        --script "$SCRIPT" \
+        --background
+
+    echo "● Waiting for VPN..."
+
+    sleep 5
+
+    if is_connected && ip link show tun0 >/dev/null 2>&1; then
+
+        echo "● Refreshing network..."
+
+        sudo systemctl restart NetworkManager
+
+        sleep 5
+
+        echo
+        echo "✓ VPN CONNECTED"
+        echo
+
+        ip addr show tun0 | grep "inet "
+
+    else
+
+        echo
+        echo "✗ VPN FAILED"
+
+    fi
+}
+
+
+disconnect_vpn() {
+
+    if ! is_connected; then
+        echo "● VPN is not running."
+        exit 0
+    fi
+
+    echo "● Disconnecting VPN..."
+
+    sudo pkill -x openconnect
+
+    sleep 2
+
+    echo "✓ VPN disconnected."
+}
+
+
+status_vpn() {
+
+    if is_connected; then
+
+        echo "● VPN STATUS: CONNECTED"
+
+        if ip link show tun0 >/dev/null 2>&1; then
+            echo
+            echo "Interface:"
+            ip addr show tun0 | grep "inet "
+        fi
+
+    else
+
+        echo "● VPN STATUS: DISCONNECTED"
+
+    fi
+}
+
+
+case "$1" in
+
+    "")
+        show_header
+        connect_vpn
+        ;;
+
+    start|connect)
+        show_header
+        connect_vpn
+        ;;
+
+    stop|disconnect)
+        show_header
+        disconnect_vpn
+        ;;
+
+    restart)
+        show_header
+        disconnect_vpn
+        sleep 2
+        connect_vpn
+        ;;
+
+    status)
+        show_header
+        status_vpn
+        ;;
+
+    *)
+        show_header
+        echo "Usage:"
+        echo
+        echo " vpn              Connect"
+        echo " vpn stop         Disconnect"
+        echo " vpn status       Status"
+        echo " vpn restart      Restart"
+        ;;
+
+esac
