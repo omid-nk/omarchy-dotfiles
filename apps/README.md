@@ -1,28 +1,35 @@
-# Apps & Packages
+# 📦 Apps & Packages
+Applications and packages installed and used in my Omarchy setup.
 
-Applications, tools, and packages I use on my Omarchy/Linux system.
-
-## Browsers
-
+## 🌐 Browsers
 * Chromium
 * Brave
 
-## Download & File Management
-
+## 📥 Download & File Management
 * Free Download Manager
 * Video Downloader
 * OneDrive
 
-## Media & Video
-
-* Celluloid
-* Amberol
-* DaVinci Resolve
+## 🎬 Media & Video
+* mpv
 * Shutter Encoder
 * FFmpeg
+* OBS Studio
 
-## Development
+## 🖼️ Image & Media Tools
+* Upscayl
+* Curtail
+* Gradia
 
+## 📝 Notes & Productivity
+* Obsidian
+* PDF Arranger
+* Document Viewer
+* Google Docs
+* Google Sheets
+* Google Slides
+
+## 💻 Development
 * Visual Studio Code
 * Cursor
 * Codex
@@ -33,38 +40,26 @@ Applications, tools, and packages I use on my Omarchy/Linux system.
 * pnpm
 * mise
 
-## Hosting & Backend
-
+## ☁️ Hosting & Backend
 * Cloudflare Pages
 * Supabase
 * Netlify
 
-## Documents & Productivity
-
-* Document Viewer
-* Google Docs
-* Google Sheets
-* Google Slides
-
-## Design & 3D
-
+## 🎨 Design & 3D
 * Blender
+* Constrict
 
-## File Transfer
-
+## 📡 File Transfer
 * LocalSend
 
-## Communication
-
+## 💬 Communication
 * Google Meet
 * Limoo Host
 
-## Terminal
-
+## 🖥️ Terminal
 * Kitty
 
-## CLI Tools
-
+## 🛠️ CLI Tools
 * Fastfetch
 * Nano
 * Bat
@@ -80,18 +75,16 @@ Applications, tools, and packages I use on my Omarchy/Linux system.
 * curl
 * wget
 
-## Package Management
-
+## 📦 Package Management
 * Pacman
 * yay
 * Flatpak
 
-## Network
-
+## 🌐 Network
 * NetworkManager
+* OpenConnect
 
-## Archive & Compression
-
+## 🗜️ Archive & Compression
 * 7-Zip
 * unzip
 * tar
