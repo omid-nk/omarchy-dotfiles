@@ -1,0 +1,118 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+  "logo": {
+    "type": "builtin",
+    "source": "omarchy"
+  },
+
+  "display": {
+    "separator": "  ",
+    "brightColor": false
+  },
+
+  "modules": [
+    {
+      "type": "command",
+      "key": "{#blue}├─  User",
+      "text": "whoami"
+    },
+
+    {
+      "type": "command",
+      "key": "{#blue}├─  OS",
+      "text": "grep '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '\"'"
+    },
+
+    {
+      "type": "disk",
+      "folders": "/",
+      "key": "{#blue}├─ 󱦟 OS Age",
+      "format": "{days} days"
+    },
+
+    {
+      "type": "uptime",
+      "key": "{#blue}├─  Uptime"
+    },
+
+    {
+      "type": "custom",
+      "format": "{#blue}│"
+    },
+
+    {
+  	"type": "command",
+  	"key": "{#cyan}├─  CPU",
+  	"text": "lscpu | awk -F: '/Model name/ {gsub(/^ +| +$/, \"\", $2); sub(/^12th Gen Intel\\(R\\) Core\\(TM\\) /, \"\", $2); sub(/^Intel\\(R\\) Core\\(TM\\) /, \"\", $2); print $2; exit}'"
+   },
+
+ {
+  "type": "command",
+  "key": "{#cyan}├─ 󰢮 GPU",
+  "text": "nvidia-smi --query-gpu=name,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf \"%s %sGB\\n\", $1, int($2/1024+0.5)}'"
+},
+
+    {
+      "type": "memory",
+      "key": "{#cyan}├─ 󰍛 RAM"
+    },
+
+    {
+      "type": "disk",
+      "folders": "/",
+      "key": "{#cyan}├─ 󰋊 Disk",
+      "format": "{size-used} / {size-total} ({size-percentage})"
+    },
+
+    {
+      "type": "disk",
+      "folders": "/mnt/ssd",
+      "key": "{#cyan}├─ 󰋊 Disk",
+      "format": "{size-used} / {size-total} ({size-percentage})"
+    },
+
+    {
+      "type": "disk",
+      "folders": "/mnt/hdd",
+      "key": "{#cyan}├─ 󰋊 Disk",
+      "format": "{size-used} / {size-total} ({size-percentage})"
+    },
+
+    {
+      "type": "custom",
+      "format": "{#cyan}│"
+    },
+
+    {
+      "type": "wm",
+      "key": "{#green}├─  WM"
+    },
+
+    {
+      "type": "display",
+      "key": "{#green}├─ 󰹑 Display",
+      "compactType": "original-with-refresh-rate"
+    },
+
+    {
+      "type": "custom",
+      "format": "{#green}│"
+    },
+
+    {
+      "type": "node",
+      "key": "{#yellow}├─  Node"
+    },
+
+    {
+      "type": "python",
+      "key": "{#yellow}├─  Python"
+    },
+
+    {
+      "type": "git",
+      "key": "{#yellow}╰─ 󰊢 Git"
+    }
+  ]
+}
