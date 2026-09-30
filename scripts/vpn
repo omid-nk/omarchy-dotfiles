@@ -4,23 +4,28 @@ SERVER=""
 USERNAME=""
 PASSWORD=""
 
+# VPN server certificate pin
+SERVER_CERT="pin-sha256:/6q4rvPpKqeIM8vJrB2u4kN21rdIM6V3ptWKXNhILTQ="
+
 SCRIPT="/etc/vpnc/vpnc-script"
+TUNNEL="tun0"
 
 
 show_header() {
     clear
-    echo "╭──────────────────────────────────────────╮"
-    echo "│             ⚡ OMARCHY VPN               │"
-    echo "├──────────────────────────────────────────┤"
-    printf "│  Server   %-28s │\n" "$SERVER"
-    printf "│  User     %-28s │\n" "$USERNAME"
-    echo "╰──────────────────────────────────────────╯"
+    echo " ────────────────────────────────────────── "
+    echo "              ⚡ OMARCHY VPN                "
+    echo " ────────────────────────────────────────── "
+    printf "  Server   %-28s \n" "$SERVER"
+    printf "  User     %-28s \n" "$USERNAME"
+    echo " ────────────────────────────────────────── "
     echo
 }
 
 
 is_connected() {
-    pgrep -x openconnect >/dev/null 2>&1
+    pgrep -x openconnect >/dev/null 2>&1 &&
+    ip link show "$TUNNEL" >/dev/null 2>&1
 }
 
 
@@ -38,14 +43,21 @@ connect_vpn() {
         "$SERVER" \
         --user="$USERNAME" \
         --passwd-on-stdin \
-        --script "$SCRIPT" \
+        --servercert="$SERVER_CERT" \
+        --script="$SCRIPT" \
         --background
 
     echo "● Waiting for VPN..."
 
-    sleep 5
+    for i in {1..15}; do
+        if is_connected; then
+            break
+        fi
 
-    if is_connected && ip link show tun0 >/dev/null 2>&1; then
+        sleep 1
+    done
+
+    if is_connected; then
 
         echo "● Refreshing network..."
 
@@ -57,20 +69,24 @@ connect_vpn() {
         echo "✓ VPN CONNECTED"
         echo
 
-        ip addr show tun0 | grep "inet "
+        ip addr show "$TUNNEL" | grep "inet "
 
     else
 
         echo
         echo "✗ VPN FAILED"
+        echo
 
+        sudo pkill -x openconnect 2>/dev/null
+
+        return 1
     fi
 }
 
 
 disconnect_vpn() {
 
-    if ! is_connected; then
+    if ! pgrep -x openconnect >/dev/null 2>&1; then
         echo "● VPN is not running."
         exit 0
     fi
@@ -91,10 +107,10 @@ status_vpn() {
 
         echo "● VPN STATUS: CONNECTED"
 
-        if ip link show tun0 >/dev/null 2>&1; then
+        if ip link show "$TUNNEL" >/dev/null 2>&1; then
             echo
             echo "Interface:"
-            ip addr show tun0 | grep "inet "
+            ip addr show "$TUNNEL" | grep "inet "
         fi
 
     else
@@ -138,10 +154,11 @@ case "$1" in
         show_header
         echo "Usage:"
         echo
-        echo " vpn              Connect"
-        echo " vpn stop         Disconnect"
-        echo " vpn status       Status"
-        echo " vpn restart      Restart"
+        echo "  vpn              Connect"
+        echo "  vpn start        Connect"
+        echo "  vpn stop         Disconnect"
+        echo "  vpn status       Status"
+        echo "  vpn restart      Restart"
         ;;
 
 esac

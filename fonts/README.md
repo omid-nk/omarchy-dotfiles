@@ -9,7 +9,7 @@ All font files are stored in this directory and can be installed locally on Linu
 Copy the font files to the user's local font directory:
 
 mkdir -p ~/.local/share/fonts
-cp fonts/files/* ~/.local/share/fonts/
+cp fonts/files/\* ~/.local/share/fonts/
 
 Then rebuild the font cache:
 
@@ -44,11 +44,3 @@ This setup uses the user-level directory, so sudo is not required.
 After adding or replacing font files:
 
 fc-cache -fv
-
-Applications may need to be restarted before newly installed fonts become available.
-
-📝 Notes
-Keep font files directly inside this directory.
-Prefer .ttf and .otf font formats.
-Do not install fonts system-wide unless necessary.
-The fonts in this directory are the fonts used by this setup.

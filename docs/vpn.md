@@ -6,7 +6,7 @@ Installation
 
 Copy the script to:
 
-~/.local/bin/vpn
+~/.local/bin/
 
 Make it executable:
 
@@ -25,11 +25,6 @@ PASSWORD=""
 The script requires:
 
 sudo pacman -S openconnect
-
-It also uses:
-
-/etc/vpnc/vpnc-script
-Usage
 
 Connect:
 
